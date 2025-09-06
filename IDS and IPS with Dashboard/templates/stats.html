@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IDS/IPS Stats</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  {% include 'navbar.html' %}
+
+  <main class="flex-1 container mx-auto p-6">
+    <h2 class="text-2xl font-semibold mb-4">TOP 5 source IPs</h2>
+    <div class="bg-white shadow rounded-lg p-4">
+      <canvas id="topSrcChart"></canvas>
+    </div>
+  </main>
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 text-center py-4">
+    IDS/IPS © {{ 2025 }} | Dashboard | Electro5218
+  </footer>
+  <script>
+    const ctx = document.getElementById('topSrcChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Number of alerts',
+          data: {{ data|safe }},
+          backgroundColor: 'rgba(59, 130, 246, 0.7)'
+        }]
+      }
+    });
+  </script>
+</body>
+</html>

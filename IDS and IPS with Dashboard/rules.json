@@ -1,0 +1,20 @@
+{
+  "syn_scan": true,
+  "xmas_scan": true,
+  "syn_flood": true,
+  "udp_suspicious": true,
+  "icmp_flood": true,
+  "ping_sweep": true,
+  "port_scan": true,
+  "brute_force_ssh": true,
+  "brute_force_telnet": true,
+  "brute_force_rdp": true,
+  "sql_injection": true,
+  "xss_attack": true,
+  "malicious_file_download": true,
+  "dns_tunneling": true,
+  "suspicious_http_user_agent": true,
+  "smb_exploit_attempt": true,
+  "ftp_brute_force": true,
+  "suspicious_tls_handshake": true
+}

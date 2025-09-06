@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IDS/IPS Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <header class="bg-gray-900 text-white shadow-md">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-xl font-bold">IDS/IPS Dashboard</h1>
+      <nav>
+        <ul class="flex gap-4">
+          <li><a href="{{ url_for('index') }}" class="hover:text-blue-400">Alerts</a></li>
+          <li><a href="{{ url_for('stats') }}" class="hover:text-blue-400">Statistics</a></li>
+          <li><a href="{{ url_for('rules') }}" class="hover:text-blue-400">Rules</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 container mx-auto p-6">
+    <h2 class="text-2xl font-semibold mb-4">Recent Alerts</h2>
+    
+    <!-- Alerts Table -->
+    <div class="bg-white shadow rounded-lg overflow-hidden mb-8">
+      <table class="w-full table-auto text-sm text-left">
+        <thead class="bg-gray-200 text-gray-700 uppercase text-xs">
+          <tr>
+            <th class="px-4 py-3">Time</th>
+            <th class="px-4 py-3">Source IP</th>
+            <th class="px-4 py-3">Dest IP</th>
+            <th class="px-4 py-3">Protocol</th>
+            <th class="px-4 py-3">Alert</th>
+            <th class="px-4 py-3">City</th>
+            <th class="px-4 py-3">Country</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ts, src, dst, proto, alert, city, country in alerts %}
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2">{{ ts }}</td>
+            <td class="px-4 py-2 text-blue-600">{{ src }}</td>
+            <td class="px-4 py-2 text-green-600">{{ dst }}</td>
+            <td class="px-4 py-2">{{ proto }}</td>
+            <td class="px-4 py-2 font-semibold {% if "ATTACK" in alert.upper() %}text-red-600{% else %}text-yellow-600{% endif %}">
+              {{ alert }}
+            </td>
+            <td class="px-4 py-2">{{ city }}</td>
+            <td class="px-4 py-2">{{ country }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" class="px-4 py-4 text-center text-gray-500">No Alerts</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Chart -->
+    <h2 class="text-2xl font-semibold mb-4">Alert Stats (per hour)</h2>
+    <div class="bg-white shadow rounded-lg p-4">
+      <canvas id="alertsChart" class="w-full h-64"></canvas>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 text-center py-4">
+    IDS/IPS © {{ 2025 }} | Dashboard | Electro5218
+  </footer>
+
+  <!-- Chart.js Script -->
+  <script>
+    const ctx = document.getElementById('alertsChart').getContext('2d');
+    const alertsChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: {{ chart_labels | tojson }},
+        datasets: [{
+          label: 'Amount of Alerts',
+          data: {{ chart_data | tojson }},
+          borderColor: 'rgb(239, 68, 68)',
+          backgroundColor: 'rgba(239, 68, 68, 0.3)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: true }},
+        scales: {
+          x: { title: { display: true, text: 'Time' }},
+          y: { title: { display: true, text: 'Alerts' }, beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

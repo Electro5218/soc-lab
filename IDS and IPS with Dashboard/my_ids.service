@@ -1,0 +1,14 @@
+[Unit]
+Description=My_IDS Intrusion Detection & Prevention System
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/my_ids/ids.py
+WorkingDirectory=/opt/my_ids
+Restart=always
+User=root
+Environment=IDS_WORKERS=4
+Environment=GEOIP_DB=/opt/my_ids/GeoLite2-City.mmdb
+
+[Install]
+WantedBy=multi-user.target
